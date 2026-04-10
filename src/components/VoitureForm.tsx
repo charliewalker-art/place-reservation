@@ -5,6 +5,7 @@ import type { Voiture, ServiceType } from '../types/voiture';
 import { saveVoiture } from '../api/voitureService';
 import { ServiceOption } from './VoitureForm/ServiceOption';
 
+
 export const VoitureForm: React.FC = () => {
   const [formData, setFormData] = useState<Voiture>({
     idVoit  : '',
@@ -57,6 +58,11 @@ export const VoitureForm: React.FC = () => {
       toast.error("Impossible de contacter le serveur");
     }
   };
+
+
+
+
+
 
   return (
     <div className="max-w-4xl mx-auto rounded-xl bg-white p-10 shadow-sm border border-slate-100">
@@ -123,7 +129,7 @@ export const VoitureForm: React.FC = () => {
       </div>
 
       <div className="flex justify-end gap-8">
-        <button className="font-semibold text-slate-600 hover:text-slate-900">Annuler</button>
+      
         <button 
           onClick={handleSubmit} 
           className="rounded-lg bg-[#006b44] px-8 py-3 font-bold text-white hover:bg-[#005a39] shadow-md active:scale-95 transition-all"

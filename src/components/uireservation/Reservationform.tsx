@@ -252,6 +252,7 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
             reste={reste}
             payment={payment}
             onMontantChange={setMontantAvance}
+            onPaymentChange={setPayment}
           />
 
           <button

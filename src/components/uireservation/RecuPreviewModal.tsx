@@ -34,7 +34,7 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
               <div className="bg-blue-700 text-white p-2 rounded-lg">
                 <span className="font-bold text-xl leading-none block">F</span>
               </div>
-              <span className="font-bold text-xl text-slate-900 tracking-tight">FleetFlow Pro</span>
+              <span className="font-bold text-xl text-slate-900 tracking-tight">Places Cooperative</span>
             </div>
             <div className="flex gap-4 print:hidden">
               <button onClick={handlePrint} className="text-slate-500 hover:text-slate-800 transition">

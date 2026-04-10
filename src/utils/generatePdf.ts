@@ -12,17 +12,17 @@ export const generatePdf = (recu: RecuDTO) => {
   const textMuted = '#64748b';
   const bgCard = '#f8fafc'; // Gris très clair pour les cartes
 
-  // ---- HEADER (FleetFlow Pro) ----
+  // ---- HEADER (Places Cooperative) ----
   doc.setFillColor(primary);
   doc.roundedRect(15, 15, 10, 10, 2, 2, 'F');
   doc.setTextColor('#ffffff');
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
-  doc.text('F', 20, 22, { align: 'center' });
+  doc.text('P', 20, 22, { align: 'center' });
 
   doc.setTextColor(textDark);
   doc.setFontSize(14);
-  doc.text('FleetFlow Pro', 30, 22);
+  doc.text('Places Cooperative', 30, 22);
 
   // ---- TITRE ----
   doc.setFontSize(20);
@@ -94,7 +94,7 @@ export const generatePdf = (recu: RecuDTO) => {
 
   // En-têtes tableau
   doc.setFontSize(8);
-  doc.text('DÉSIGNATION', 20, 148);
+  doc.text('DESCRIPTION', 20, 148);
   doc.text('MONTANT', 190, 148, { align: 'right' });
 
   doc.setDrawColor(226, 232, 240); // Ligne séparatrice
