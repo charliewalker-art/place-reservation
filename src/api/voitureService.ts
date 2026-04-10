@@ -3,10 +3,12 @@ import type { Voiture } from '../types/voiture';
 
 import type { Place } from '../types/voiture';
 
-const API_URL = 'http://127.0.0.1:8080/api/voiture';
+const BASE_URL = import.meta.env.VITE_API_URL;
+
+const API_URL = `${BASE_URL}/voiture`;
 
 
-const PLACE_URL = 'http://127.0.0.1:8080/api/place';
+const PLACE_URL = `${BASE_URL}/place`;
 
 export const saveVoiture = async (voiture: Voiture) => {
   return await axios.post(API_URL, voiture);

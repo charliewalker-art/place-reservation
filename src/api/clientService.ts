@@ -1,8 +1,8 @@
 import axios from 'axios';
 import type { Client } from '../types/client';
 
-// Ajuste l'URL selon le mapping de ton contrôleur Spring Boot (ex: @RequestMapping("/api/clients"))
-const API_URL = 'http://127.0.0.1:8080/api/client';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${BASE_URL}/client`;
 
 export const saveClient = async (client: Client) => {
   return await axios.post(API_URL, client);

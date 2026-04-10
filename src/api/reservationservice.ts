@@ -1,7 +1,8 @@
 import axios from 'axios';
 import type { Reservation, VoyageurDTO, DashboardDTO,RecuDTO } from '../types/reservation';
 
-const API_URL = 'http://127.0.0.1:8080/api/reservation';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${BASE_URL}/reservation`;
 
 export const createReservation = async (
   idVoit: string,

@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://127.0.0.1:8080/api/place';
+const BASE_URL = import.meta.env.VITE_API_URL;
+const API_URL = `${BASE_URL}/place`;
 
 // Récupère le nombre de places libres pour calculer la barre de progression
 export const getCountPlacesLibres = async (idVoit: string) => {
