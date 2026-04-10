@@ -21,9 +21,7 @@ const Navbar: React.FC = () => {
         
         {/* Desktop Menu (maintenant à gauche) */}
         <div className="hidden md:flex items-center gap-8 font-medium">
-          <NavLink to="/dashboard" className={activeLink}>
-            Dashboard
-          </NavLink>
+
           <NavLink to="/voitures" className={activeLink}>
             Voitures
           </NavLink>

@@ -99,4 +99,15 @@ export const getRecu = async (idReserv: string) => {
     console.error(`Erreur recuperation recu ${idReserv}:`, error);
     throw error;
   }
+  
+};
+
+export const getTotalRecette = async () => {
+  try {
+    const response = await axios.get<number>(`${API_URL}/recette-totale`);
+    return response.data;
+  } catch (error) {
+    console.error('Erreur récupération recette totale:', error);
+    return 0;
+  }
 };

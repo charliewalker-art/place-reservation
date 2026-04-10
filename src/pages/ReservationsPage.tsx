@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import type { DashboardDTO, VoyageurDTO } from '../types/reservation';
-import { getDashboard, getSuiviVoyageurs } from '../api/reservationservice';
+// 1. Ajout de getTotalRecette ici
+import { getDashboard, getSuiviVoyageurs, getTotalRecette } from '../api/reservationservice';
 import ReservationForm from '../components/uireservation/Reservationform';
 import StatsCards from '../components/uireservation/StatsCards';
 import VoyageursTable from '../components/uireservation/Voyageurstable';
@@ -11,12 +12,14 @@ const ReservationsPage: React.FC = () => {
     totalToutPaye: 0,
     totalResteAPayer: 0,
   });
+  
+  // 2. Nouvel état pour la recette
+  const [recetteTotale, setRecetteTotale] = useState<number>(0);
+  
   const [voyageurs, setVoyageurs] = useState<VoyageurDTO[]>([]);
   const [selectedVoiture, setSelectedVoiture] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
-  // ← NOUVEAU : réservation en cours de modification
   const [reservationAModifier, setReservationAModifier] = useState<VoyageurDTO | null>(null);
 
   const loadData = useCallback(async (idVoit: string) => {
@@ -24,12 +27,18 @@ const ReservationsPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
-      const [dashRes, voyRes] = await Promise.all([
+      
+      // 3. On ajoute l'appel à la recette totale dans le Promise.all
+      const [dashRes, voyRes, recetteRes] = await Promise.all([
         getDashboard(idVoit),
         getSuiviVoyageurs(idVoit),
+        getTotalRecette() // On récupère la somme globale
       ]);
+      
       setDashboard(dashRes.data);
       setVoyageurs(voyRes.data);
+      setRecetteTotale(recetteRes); // On met à jour l'état
+      
     } catch (error: any) {
       console.error('Erreur chargement données:', error);
       setError(error.message || 'Impossible de charger les données.');
@@ -42,10 +51,8 @@ const ReservationsPage: React.FC = () => {
     if (selectedVoiture) loadData(selectedVoiture);
   }, [selectedVoiture, loadData]);
 
-  // Déclenché depuis VoyageursTable quand on clique sur ✏️
   const handleModifier = (voyageur: VoyageurDTO) => {
     setReservationAModifier(voyageur);
-    // Scroll vers le formulaire sur mobile
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -56,7 +63,6 @@ const ReservationsPage: React.FC = () => {
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
             Gestion des Réservations
           </h1>
-   
         </div>
       </header>
 
@@ -77,8 +83,8 @@ const ReservationsPage: React.FC = () => {
               setSelectedVoiture(idVoit);
               loadData(idVoit);
             }}
-            reservationAModifier={reservationAModifier}           // ← NOUVEAU
-            onAnnulerModification={() => setReservationAModifier(null)} // ← NOUVEAU
+            reservationAModifier={reservationAModifier}
+            onAnnulerModification={() => setReservationAModifier(null)}
           />
         </div>
 
@@ -89,12 +95,16 @@ const ReservationsPage: React.FC = () => {
             </div>
           ) : (
             <>
-              <StatsCards dashboard={dashboard} />
+              {/* 4. On passe maintenant la recette au composant */}
+              <StatsCards 
+                dashboard={dashboard} 
+                recetteTotale={recetteTotale} 
+              />
+              
               <VoyageursTable
                 voyageurs={voyageurs}
-                onModifier={handleModifier} // ← NOUVEAU
-                 onSupprimer={() => loadData(selectedVoiture)} // ← rafraîchit la liste
-                
+                onModifier={handleModifier}
+                onSupprimer={() => loadData(selectedVoiture)}
               />
             </>
           )}
