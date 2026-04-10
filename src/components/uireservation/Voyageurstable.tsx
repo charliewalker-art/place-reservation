@@ -199,6 +199,7 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs, onModifier, 
               <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 bg-slate-50/50">
                 <th className="px-4 py-4 md:px-6">Place</th>
                 <th className="px-4 py-4 md:px-6">Client / Contact</th>
+                <th className="px-4 py-4 md:px-6">Date Voyage</th> 
                 <th className="px-4 py-4 md:px-6 text-center">Statut Paiement</th>
                 <th className="px-4 py-4 md:px-6 text-right">Reste</th>
                 <th className="px-4 py-4 md:px-6 text-center">Actions</th>
@@ -207,7 +208,7 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs, onModifier, 
             <tbody className="divide-y divide-slate-100 text-sm">
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-slate-400 font-medium text-sm">
+                  <td colSpan={6} className="px-6 py-8 text-center text-slate-400 font-medium text-sm">
                     Aucun voyageur trouvé
                   </td>
                 </tr>
@@ -223,6 +224,15 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs, onModifier, 
                       <div className="font-bold text-slate-800">{v.nomClient}</div>
                       <div className="text-[11px] text-slate-500 font-medium mt-0.5">{v.numTel}</div>
                     </td>
+
+                  <td className="px-4 py-4 md:px-6">
+                    <div className="text-sm text-slate-600 font-medium">
+                      {v.dateVoyage || 'Non définie'}
+                    </div>
+                  </td>
+
+
+
                     <td className="px-4 py-4 md:px-6 text-center">
                       <span className={`text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-wider whitespace-nowrap ${getStatusStyle(v.statutPaiement)}`}>
                         {getStatusLabel(v.statutPaiement)}

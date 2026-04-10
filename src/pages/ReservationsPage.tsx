@@ -56,7 +56,7 @@ const ReservationsPage: React.FC = () => {
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
             Gestion des Réservations
           </h1>
-          <p className="text-slate-500 font-medium mt-1">Coopérative de Transport Centralisée</p>
+   
         </div>
       </header>
 

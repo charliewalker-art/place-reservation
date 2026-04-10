@@ -23,6 +23,7 @@ export interface VoyageurDTO {
   frais: number;
   montantAvance: number;
   resteAPayer: number;
+  dateVoyage: string;
 }
 
 export interface DashboardDTO {
