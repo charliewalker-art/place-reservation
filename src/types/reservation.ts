@@ -7,7 +7,7 @@ export interface Reservation {
   idReserv?: string;
   voiture?: Voiture;
   client?: Client;
-  place: number;
+  place?: number | null; 
   dateVoyage: string;
   dateReserv?: string;
   payment: PaymentType;

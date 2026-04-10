@@ -5,7 +5,6 @@ import ReservationForm from '../components/uireservation/Reservationform';
 import StatsCards from '../components/uireservation/StatsCards';
 import VoyageursTable from '../components/uireservation/Voyageurstable';
 
-
 const ReservationsPage: React.FC = () => {
   const [dashboard, setDashboard] = useState<DashboardDTO>({
     totalPassagers: 0,
@@ -16,6 +15,9 @@ const ReservationsPage: React.FC = () => {
   const [selectedVoiture, setSelectedVoiture] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+
+  // ← NOUVEAU : réservation en cours de modification
+  const [reservationAModifier, setReservationAModifier] = useState<VoyageurDTO | null>(null);
 
   const loadData = useCallback(async (idVoit: string) => {
     if (!idVoit) return;
@@ -37,14 +39,18 @@ const ReservationsPage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (selectedVoiture) {
-      loadData(selectedVoiture);
-    }
+    if (selectedVoiture) loadData(selectedVoiture);
   }, [selectedVoiture, loadData]);
+
+  // Déclenché depuis VoyageursTable quand on clique sur ✏️
+  const handleModifier = (voyageur: VoyageurDTO) => {
+    setReservationAModifier(voyageur);
+    // Scroll vers le formulaire sur mobile
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 p-6 font-sans text-slate-800">
-      {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
@@ -52,7 +58,6 @@ const ReservationsPage: React.FC = () => {
           </h1>
           <p className="text-slate-500 font-medium mt-1">Coopérative de Transport Centralisée</p>
         </div>
-
       </header>
 
       {error && (
@@ -62,7 +67,6 @@ const ReservationsPage: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Formulaire Reservation */}
         <div className="lg:col-span-5">
           <ReservationForm
             onReservationCreated={(idVoit: string) => {
@@ -73,10 +77,11 @@ const ReservationsPage: React.FC = () => {
               setSelectedVoiture(idVoit);
               loadData(idVoit);
             }}
+            reservationAModifier={reservationAModifier}           // ← NOUVEAU
+            onAnnulerModification={() => setReservationAModifier(null)} // ← NOUVEAU
           />
         </div>
 
-        {/* Colonne Droite */}
         <div className="lg:col-span-7 space-y-6">
           {loading ? (
             <div className="flex justify-center items-center py-12">
@@ -85,14 +90,14 @@ const ReservationsPage: React.FC = () => {
           ) : (
             <>
               <StatsCards dashboard={dashboard} />
-              <VoyageursTable voyageurs={voyageurs} />
-           
+              <VoyageursTable
+                voyageurs={voyageurs}
+                onModifier={handleModifier} // ← NOUVEAU
+              />
             </>
           )}
         </div>
       </div>
-
-
     </div>
   );
 };

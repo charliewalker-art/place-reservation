@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, User, ChevronLeft, ChevronRight, FileText, Eye } from 'lucide-react';
+import { Search, User, ChevronLeft, ChevronRight, FileText, Eye, Pencil } from 'lucide-react';
 import type { VoyageurDTO, RecuDTO } from '../../types/reservation';
 import { getRecu } from '../../api/reservationservice';
 import { generatePdf } from '../../utils/generatePdf';
@@ -7,17 +7,16 @@ import RecuPreviewModal from './RecuPreviewModal';
 
 interface VoyageursTableProps {
   voyageurs: VoyageurDTO[];
+  onModifier: (voyageur: VoyageurDTO) => void; // ← NOUVEAU
 }
 
 const ITEMS_PER_PAGE = 4;
 
-const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
+const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs, onModifier }) => {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('tous');
   const [page, setPage] = useState(0);
   const [loadingAction, setLoadingAction] = useState<string | null>(null);
-  
-  // État pour la prévisualisation
   const [previewRecu, setPreviewRecu] = useState<RecuDTO | null>(null);
 
   const filtered = voyageurs.filter((v) => {
@@ -35,33 +34,29 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
   const paginated = filtered.slice(page * ITEMS_PER_PAGE, (page + 1) * ITEMS_PER_PAGE);
 
   const getStatusStyle = (status: string) =>
-    status === 'TOUT_PAYE'
-      ? 'bg-emerald-50 text-emerald-600'
-      : 'bg-red-50 text-red-600';
+    status === 'TOUT_PAYE' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600';
 
   const getStatusLabel = (status: string) =>
     status === 'TOUT_PAYE' ? 'TOUT PAYÉ' : 'RESTE À PAYER';
 
-  // Prévisualiser le PDF
   const handlePreview = async (idReserv: string) => {
     try {
       setLoadingAction(`view-${idReserv}`);
       const res = await getRecu(idReserv);
       setPreviewRecu(res.data);
-    } catch (error) {
+    } catch {
       alert('Erreur lors du chargement du reçu.');
     } finally {
       setLoadingAction(null);
     }
   };
 
-  // Téléchargement direct
   const handleGeneratePdf = async (idReserv: string) => {
     try {
       setLoadingAction(`download-${idReserv}`);
       const res = await getRecu(idReserv);
       generatePdf(res.data);
-    } catch (error) {
+    } catch {
       alert('Erreur lors de la génération du PDF.');
     } finally {
       setLoadingAction(null);
@@ -70,7 +65,7 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-      {/* Header (Responsive ajusté) */}
+      {/* Header */}
       <div className="p-4 md:p-6 flex flex-col lg:flex-row justify-between items-start lg:items-center border-b border-slate-100 gap-4">
         <div className="flex items-center gap-3">
           <div className="bg-emerald-50 p-2.5 rounded-lg text-emerald-600">
@@ -101,9 +96,9 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
         </div>
       </div>
 
-      {/* Tableau (Responsive scroll horizontal) */}
+      {/* Tableau */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse min-w-600px]">
+        <table className="w-full text-left border-collapse min-w-600px">
           <thead>
             <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 bg-slate-50/50">
               <th className="px-4 py-4 md:px-6">Place</th>
@@ -142,6 +137,14 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
                   </td>
                   <td className="px-4 py-4 md:px-6">
                     <div className="flex items-center justify-center gap-2">
+                      {/* ← NOUVEAU BOUTON MODIFIER */}
+                      <button
+                        onClick={() => onModifier(v)}
+                        title="Modifier la réservation"
+                        className="p-2 bg-amber-50 text-amber-600 border border-amber-100 rounded-lg hover:bg-amber-100 transition-colors"
+                      >
+                        <Pencil size={16} />
+                      </button>
                       <button
                         onClick={() => handlePreview(v.idReserv)}
                         disabled={loadingAction === `view-${v.idReserv}`}
@@ -190,12 +193,8 @@ const VoyageursTable: React.FC<VoyageursTableProps> = ({ voyageurs }) => {
         </div>
       </div>
 
-      {/* Rendu de la Modale */}
       {previewRecu && (
-        <RecuPreviewModal 
-          recu={previewRecu} 
-          onClose={() => setPreviewRecu(null)} 
-        />
+        <RecuPreviewModal recu={previewRecu} onClose={() => setPreviewRecu(null)} />
       )}
     </div>
   );

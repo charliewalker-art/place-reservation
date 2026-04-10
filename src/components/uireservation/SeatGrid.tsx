@@ -6,14 +6,22 @@ interface SeatGridProps {
   places: Place[];
   selectedPlace: number | null;
   onSelectPlace: (num: number) => void;
+  currentReservationPlace?: number; // ← NOUVEAU : place actuelle en mode modif
 }
 
-const SeatGrid: React.FC<SeatGridProps> = ({ places, selectedPlace, onSelectPlace }) => {
+const SeatGrid: React.FC<SeatGridProps> = ({
+  places,
+  selectedPlace,
+  onSelectPlace,
+  currentReservationPlace,
+}) => {
   const getPlaceStatus = (num: number): 'LIBRE' | 'OCCUPE' | 'SELECTED' => {
     if (selectedPlace === num) return 'SELECTED';
     const found = places.find((p) => p.place === num);
     if (!found) return 'LIBRE';
-  return found.occupation === 'OCCUPE' ? 'OCCUPE' : 'LIBRE';
+    // La place actuelle de la réservation doit rester cliquable
+    if (found.occupation === 'OCCUPE' && num === currentReservationPlace) return 'LIBRE';
+    return found.occupation === 'OCCUPE' ? 'OCCUPE' : 'LIBRE';
   };
 
   const getSeatStyle = (status: 'LIBRE' | 'OCCUPE' | 'SELECTED') => {
@@ -34,13 +42,10 @@ const SeatGrid: React.FC<SeatGridProps> = ({ places, selectedPlace, onSelectPlac
       </label>
       <div className="bg-slate-50 p-5 rounded-xl border border-slate-100">
         <div className="grid grid-cols-3 gap-3">
-          {/* Chauffeur */}
           <div className="col-span-1 bg-slate-200 rounded-lg h-11 flex items-center justify-center text-slate-400">
             <Car size={20} />
           </div>
           <div className="col-span-2" />
-
-          {/* Places */}
           {places.map((p) => {
             const status = getPlaceStatus(p.place);
             return (
@@ -55,20 +60,15 @@ const SeatGrid: React.FC<SeatGridProps> = ({ places, selectedPlace, onSelectPlac
             );
           })}
         </div>
-
-        {/* Legende */}
         <div className="flex gap-5 mt-5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full border-2 border-slate-300 bg-white" />
-            Libre
+            <span className="w-2.5 h-2.5 rounded-full border-2 border-slate-300 bg-white" />Libre
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-blue-700" />
-            Sélection
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-700" />Sélection
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-red-200" />
-            Occupé
+            <span className="w-2.5 h-2.5 rounded-full bg-red-200" />Occupé
           </div>
         </div>
       </div>

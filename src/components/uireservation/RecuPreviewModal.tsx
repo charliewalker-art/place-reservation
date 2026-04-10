@@ -90,8 +90,8 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
                   <p className="font-bold text-slate-900">Voiture N°{recu.idVoiture}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Catégorie</p>
-                  <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full">PREMIUM</span>
+               
+            
                 </div>
               </div>
               <div>
