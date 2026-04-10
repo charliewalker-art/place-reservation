@@ -18,9 +18,8 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-white border-b border-slate-200 px-4 py-4 md:px-8">
       <div className="flex items-center justify-between">
-        <span className="text-blue-700 font-extrabold text-xl tracking-tight">Places Cooperative</span>
-
-        {/* Desktop Menu */}
+        
+        {/* Desktop Menu (maintenant à gauche) */}
         <div className="hidden md:flex items-center gap-8 font-medium">
           <NavLink to="/dashboard" className={activeLink}>
             Dashboard
@@ -36,13 +35,18 @@ const Navbar: React.FC = () => {
           </NavLink>
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button (apparaît à gauche sur mobile) */}
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden text-slate-500 hover:text-slate-700 transition-colors"
         >
           {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
+
+        {/* Logo / Nom (maintenant à droite) */}
+        <span className="text-blue-700 font-extrabold text-xl tracking-tight">
+          Places Cooperative
+        </span>
       </div>
 
       {/* Mobile Menu */}

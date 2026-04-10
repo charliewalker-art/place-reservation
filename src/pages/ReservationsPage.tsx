@@ -93,6 +93,8 @@ const ReservationsPage: React.FC = () => {
               <VoyageursTable
                 voyageurs={voyageurs}
                 onModifier={handleModifier} // ← NOUVEAU
+                 onSupprimer={() => loadData(selectedVoiture)} // ← rafraîchit la liste
+                
               />
             </>
           )}

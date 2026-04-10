@@ -111,7 +111,7 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-100/50">
                   <tr>
-                    <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Désignation</th>
+                    <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider">DESCRIPTION</th>
                     <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">Montant</th>
                   </tr>
                 </thead>
