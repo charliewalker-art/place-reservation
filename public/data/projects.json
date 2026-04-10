@@ -1,0 +1,55 @@
+[
+  {
+    "id": "projet-1",
+    "title": "Mon premier projet256EEE56",
+    "description": "Description courte",
+    "tags": ["React", "TypeScript"],
+    "status": "en cours",
+    "githubUrl": "/projet-1"
+  },
+
+  {
+    "id": "projet-2",
+    "title": "Mon deuxième projssssssssssssset",
+    "description": "Description courte",
+    "tags": ["Node.js", "Express"],
+    "status": "terminé",
+    "githubUrl": "/projet-2"
+  },
+
+  {
+    "id": "projet-3",
+    "title": "Mon troisième projet",
+    "description": "Description courte",
+    "tags": ["Python", "Django"],
+    "status": "en cours",
+    "githubUrl": "/projet-3"
+  },
+
+  {
+    "id": "projet-4",
+    "title": "Mon quatrième projet",
+    "description": "Description courte",
+    "tags": ["Java", "Spring"],
+    "status": "terminé",
+    "githubUrl": "/projet-4"
+  },
+
+  {
+    "id": "projet-5",
+    "title": "Mon cinquième projet",
+    "description": "Description courte",
+    "tags": ["Go", "Gin"],
+    "status": "en cours",
+    "githubUrl": "/projet-5"
+  },
+
+  {
+    "id": "projet-6",
+    "title": "Mon sixième projet",
+    "description": "Description courte",
+    "tags": ["Ruby", "Rails"],
+    "status": "terminé",
+    "githubUrl": "/projet-6"
+  }
+]
