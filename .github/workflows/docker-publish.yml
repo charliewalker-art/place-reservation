@@ -32,6 +32,3 @@ jobs:
           context: .
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          # On injecte l'URL de ton API de prod ici
-          build-args: |
-            VITE_API_URL=https://api.ton-domaine.com/api

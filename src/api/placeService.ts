@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_URL;
+const BASE_URL = "/api";
 const API_URL = `${BASE_URL}/place`;
 
 // Récupère le nombre de places libres pour calculer la barre de progression
