@@ -2,7 +2,7 @@ import React from 'react';
 import { X, Printer, Download, Phone, Car } from 'lucide-react';
 import type { RecuDTO } from '../../types/reservation';
 import { generatePdf } from '../../utils/generatePdf';
-
+import {  Truck } from 'lucide-react';
 interface RecuPreviewModalProps {
   recu: RecuDTO;
   onClose: () => void;
@@ -31,9 +31,9 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
           {/* Header */}
           <div className="flex justify-between items-start mb-10">
             <div className="flex items-center gap-2">
-              <div className="bg-blue-700 text-white p-2 rounded-lg">
-                <span className="font-bold text-xl leading-none block">F</span>
-              </div>
+                <div className="bg-blue-600 text-white p-4 rounded-xl mb-4 shadow-lg shadow-blue-200/50">
+                    <Truck size={21} />
+                </div>
               <span className="font-bold text-xl text-slate-900 tracking-tight">Places Cooperative</span>
             </div>
             <div className="flex gap-4 print:hidden">
