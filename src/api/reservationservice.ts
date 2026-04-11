@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Reservation, VoyageurDTO, DashboardDTO,RecuDTO } from '../types/reservation';
 
-const BASE_URL = "/api";
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 const API_URL = `${BASE_URL}/reservation`;
 
 export const createReservation = async (
