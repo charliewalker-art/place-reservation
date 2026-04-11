@@ -1,6 +1,7 @@
 import type { AuthResponse, LoginRequest } from '../types/auth';
 
-const API_URL = 'http://localhost:8080/api/auth';
+const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const API_URL = `${BASE_URL}/auth`; 
 
 export const authService = {
 
