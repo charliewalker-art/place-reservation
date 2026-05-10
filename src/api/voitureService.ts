@@ -2,7 +2,7 @@ import axios from './axiosConfig';
 import type { Voiture } from '../types/voiture';
 import type { Place } from '../types/voiture';
 
-const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 const API_URL = `${BASE_URL}/api/voiture`;
 const PLACE_URL = `${BASE_URL}/api/place`;  // corrigé : manquait /api/
 

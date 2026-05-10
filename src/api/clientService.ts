@@ -1,7 +1,7 @@
 import axios from './axiosConfig';
 import type { Client } from '../types/client';
 
-const BASE_URL = import.meta.env.VITE_API_URL || "/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 const API_URL = `${BASE_URL}/api/client`;
 
 export const saveClient = async (client: Client) => {
