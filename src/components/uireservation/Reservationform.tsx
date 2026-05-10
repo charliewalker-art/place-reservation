@@ -7,7 +7,6 @@ import { getVoitures, getAllPlacesByVoiture } from '../../api/voitureService';
 import { searchClient } from '../../api/clientService';
 import { createReservation, updateReservation } from '../../api/reservationservice';
 
-// Composants enfants
 import SeatGrid from './SeatGrid';
 import FormHeader from './form/FormHeader';
 import ClientSearch from './form/ClientSearch';
@@ -21,6 +20,33 @@ interface ReservationFormProps {
   reservationAModifier?: VoyageurDTO | null;
   onAnnulerModification?: () => void;
 }
+
+// Convertit n'importe quel format de date en YYYY-MM-DD pour l'input type="date"
+const toInputDate = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return '';
+
+  // Déjà au bon format YYYY-MM-DD
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+
+  // Format DD/MM/YYYY
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+    const [day, month, year] = dateStr.split('/');
+    return `${year}-${month}-${day}`;
+  }
+
+  // Format avec heure : "2026-05-10T08:57:00" ou "2026-05-10 08:57:00"
+  if (dateStr.includes('T') || (dateStr.includes('-') && dateStr.includes(':'))) {
+    return dateStr.split('T')[0].split(' ')[0];
+  }
+
+  // Dernier recours : new Date
+  const date = new Date(dateStr);
+  if (!isNaN(date.getTime())) {
+    return date.toISOString().split('T')[0];
+  }
+
+  return '';
+};
 
 const ReservationForm: React.FC<ReservationFormProps> = ({
   onReservationCreated,
@@ -71,18 +97,26 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
 
   // ── Pré-remplissage en mode modification ────────────────────────────────
   useEffect(() => {
-    if (reservationAModifier) {
+    if (reservationAModifier && selectedVoiture) {
       setSelectedPlace(reservationAModifier.place);
-      setPayment(reservationAModifier.statutPaiement as PaymentType);
+      setPayment(reservationAModifier.statutPaiement);
       setSearchQuery(reservationAModifier.nomClient);
-      if ((reservationAModifier as any).dateVoyage) {
-        setDateVoyage((reservationAModifier as any).dateVoyage);
+
+      // Conversion robuste de la date quel que soit le format du backend
+      const dateFormatee = toInputDate(reservationAModifier.dateVoyage);
+      console.log('dateVoyage reçue:', reservationAModifier.dateVoyage, '→ formatée:', dateFormatee);
+      setDateVoyage(dateFormatee);
+
+      // montantAvance correct car selectedVoiture est chargée
+      if (reservationAModifier.resteAPayer === 0) {
+        setMontantAvance(selectedVoiture.frais);
+      } else {
+        setMontantAvance(reservationAModifier.montantAvance);
       }
-      setMontantAvance(reservationAModifier.resteAPayer === 0 ? (selectedVoiture?.frais ?? 0) : 0);
-    } else {
+    } else if (!reservationAModifier) {
       resetForm();
     }
-  }, [reservationAModifier]);
+  }, [reservationAModifier, selectedVoiture]);
 
   const resetForm = () => {
     setSelectedPlace(null);
@@ -178,7 +212,6 @@ const ReservationForm: React.FC<ReservationFormProps> = ({
     }
   };
 
-  // ── Rendu ────────────────────────────────────────────────────────────────
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6 lg:p-8">
 

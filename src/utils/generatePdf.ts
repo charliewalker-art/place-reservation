@@ -1,47 +1,61 @@
 import jsPDF from 'jspdf';
 import type { RecuDTO } from '../types/reservation';
 
+const formatDateFr = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+const formatDateHeureFr = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return date.toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
 export const generatePdf = (recu: RecuDTO) => {
   const doc = new jsPDF('p', 'mm', 'a4');
 
-  // Couleurs
-  const primary = '#1d4ed8'; // Bleu (bg-blue-600)
+  const primary = '#1d4ed8';
   const textDark = '#0f172a';
   const textMuted = '#64748b';
   const bgCard = '#f8fafc';
 
-  // ---- HEADER (Logo Outline + Titre) ----
-  
-  // 1. Le fond bleu plein du logo (toujours plein)
+  // ---- HEADER ----
   doc.setFillColor(primary);
   doc.roundedRect(15, 15, 10, 10, 2, 2, 'F');
 
-  // 2. Dessin du Camion en mode CONTOUR (Outline) blanc
-  doc.setDrawColor('#ffffff'); // Couleur du contour en blanc
-  doc.setLineWidth(0.3); // Épaisseur de la ligne (assez fine)
-
-  // Corps du camion (Le container) - Rectangle vide
-  doc.rect(16.5, 18, 4.5, 3, 'S'); // 'S' pour Stroke (contour seul)
-  // La cabine - Rectangle vide
-  doc.rect(21.2, 19, 2, 2, 'S'); 
-  // Les roues (deux petits cercles vides)
+  doc.setDrawColor('#ffffff');
+  doc.setLineWidth(0.3);
+  doc.rect(16.5, 18, 4.5, 3, 'S');
+  doc.rect(21.2, 19, 2, 2, 'S');
   doc.circle(17.5, 21.5, 0.6, 'S');
   doc.circle(21.5, 21.5, 0.6, 'S');
-  // Petite ligne pour relier le container et la cabine (pour un rendu plus propre)
   doc.line(21, 21, 21.2, 21);
 
-  // 3. Texte du nom de l'entreprise
   doc.setTextColor(primary);
   doc.setFontSize(14);
   doc.setFont('helvetica', 'bold');
   doc.text('Places Cooperative', 30, 22);
 
-  // ---- TITRE DU REÇU ----
+  // ---- TITRE ----
   doc.setTextColor(textDark);
   doc.setFontSize(20);
   doc.text(`REÇU DE RÉSERVATION N°${recu.idReserv}`, 15, 45);
 
-  // ---- DATES ----
+  // ---- DATES en français ----
   doc.setFontSize(8);
   doc.setTextColor(textMuted);
   doc.text('DATE RÉSERVATION', 15, 55);
@@ -49,16 +63,16 @@ export const generatePdf = (recu: RecuDTO) => {
 
   doc.setFontSize(10);
   doc.setTextColor(textDark);
-  doc.text(recu.dateReserv || '-', 15, 60);
+  doc.text(formatDateHeureFr(recu.dateReserv), 15, 60);
   doc.setTextColor(primary);
-  doc.text(recu.dateVoyage || '-', 60, 60);
+  doc.text(formatDateFr(recu.dateVoyage), 60, 60);
 
-  // ---- CARTES INFORMATIONS (CLIENT & VOYAGE) ----
+  // ---- CARTES ----
   doc.setFillColor(bgCard);
-  doc.roundedRect(15, 75, 85, 40, 3, 3, 'F'); // Carte Client
-  doc.roundedRect(110, 75, 85, 40, 3, 3, 'F'); // Carte Voyage
+  doc.roundedRect(15, 75, 85, 40, 3, 3, 'F');
+  doc.roundedRect(110, 75, 85, 40, 3, 3, 'F');
 
-  // Contenu Client
+  // Client
   doc.setFontSize(8);
   doc.setTextColor(textMuted);
   doc.text('INFORMATION CLIENT', 20, 83);
@@ -74,7 +88,7 @@ export const generatePdf = (recu: RecuDTO) => {
   doc.setTextColor(textDark);
   doc.text(recu.contact, 20, 111);
 
-  // Contenu Voyage
+  // Voyage
   doc.setFontSize(8);
   doc.setTextColor(textMuted);
   doc.text('DÉTAILS DU VOYAGE', 115, 83);
@@ -90,7 +104,7 @@ export const generatePdf = (recu: RecuDTO) => {
   doc.setTextColor(textDark);
   doc.text(`Place N°${recu.place}`, 115, 111);
 
-  // ---- DÉTAIL DU PAIEMENT ----
+  // ---- PAIEMENT ----
   doc.setFontSize(8);
   doc.setTextColor(textMuted);
   doc.text('DÉTAIL DU PAIEMENT', 15, 135);
@@ -105,7 +119,7 @@ export const generatePdf = (recu: RecuDTO) => {
   doc.setDrawColor(226, 232, 240);
   doc.line(15, 152, 195, 152);
 
-  // Ligne Frais
+  // Frais
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(textDark);
@@ -116,9 +130,9 @@ export const generatePdf = (recu: RecuDTO) => {
   doc.text('Trajet standard premium', 20, 164);
   doc.setFontSize(10);
   doc.setTextColor(textDark);
-  doc.text(`${recu.frais.toLocaleString()} Ar`, 190, 160, { align: 'right' });
+  doc.text(`${recu.frais.toLocaleString('fr-FR')} Ar`, 190, 160, { align: 'right' });
 
-  // Ligne Avance
+  // Paiement
   doc.setFont('helvetica', 'bold');
   doc.text('Mode de paiement', 20, 172);
   doc.setFontSize(8);
@@ -127,19 +141,18 @@ export const generatePdf = (recu: RecuDTO) => {
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textMuted);
-  doc.text(`- ${recu.montantAvance.toLocaleString()} Ar`, 190, 172, { align: 'right' });
+  doc.text(`- ${recu.montantAvance.toLocaleString('fr-FR')} Ar`, 190, 172, { align: 'right' });
 
   doc.line(15, 180, 195, 180);
 
-  // Total Reste à Payer
+  // Total
   doc.setFillColor('#eff6ff');
   doc.rect(15, 180, 180, 10, 'F');
   doc.setTextColor(primary);
   doc.setFont('helvetica', 'bold');
   doc.text('RESTE À PAYER', 20, 186);
   doc.setFontSize(12);
-  doc.text(`${recu.resteAPayer.toLocaleString()} Ar`, 190, 187, { align: 'right' });
+  doc.text(`${recu.resteAPayer.toLocaleString('fr-FR')} Ar`, 190, 187, { align: 'right' });
 
-  // Téléchargement
   doc.save(`recu-${recu.idReserv}.pdf`);
 };

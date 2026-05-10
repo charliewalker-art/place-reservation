@@ -1,12 +1,36 @@
 import React from 'react';
-import { X, Printer, Download, Phone, Car } from 'lucide-react';
+import { X, Printer, Download, Phone, Car, Truck } from 'lucide-react';
 import type { RecuDTO } from '../../types/reservation';
 import { generatePdf } from '../../utils/generatePdf';
-import {  Truck } from 'lucide-react';
+
 interface RecuPreviewModalProps {
   recu: RecuDTO;
   onClose: () => void;
 }
+
+const formatDateFr = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return date.toLocaleDateString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+const formatDateHeureFr = (dateStr: string | null | undefined): string => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  return date.toLocaleString('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
 
 const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) => {
   const handlePrint = () => {
@@ -16,8 +40,8 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4 backdrop-blur-sm">
       <div className="bg-white w-full max-w-3xl rounded-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-        
-        {/* Actions Bar (Non imprimée) */}
+
+        {/* Actions Bar */}
         <div className="bg-slate-50 border-b border-slate-100 p-4 flex justify-between items-center print:hidden">
           <h3 className="font-bold text-slate-700">Prévisualisation du reçu</h3>
           <button onClick={onClose} className="p-2 text-slate-400 hover:bg-slate-200 rounded-full transition">
@@ -25,15 +49,15 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
           </button>
         </div>
 
-        {/* Contenu du reçu (Zone imprimable) */}
+        {/* Contenu */}
         <div className="p-6 md:p-10 overflow-y-auto print:p-0 print:overflow-visible bg-white">
-          
+
           {/* Header */}
           <div className="flex justify-between items-start mb-10">
             <div className="flex items-center gap-2">
-                <div className="bg-blue-600 text-white p-4 rounded-xl mb-4 shadow-lg shadow-blue-200/50">
-                    <Truck size={21} />
-                </div>
+              <div className="bg-blue-600 text-white p-4 rounded-xl mb-4 shadow-lg shadow-blue-200/50">
+                <Truck size={21} />
+              </div>
               <span className="font-bold text-xl text-slate-900 tracking-tight">Places Cooperative</span>
             </div>
             <div className="flex gap-4 print:hidden">
@@ -54,11 +78,11 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
             <div className="flex gap-12">
               <div>
                 <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Date réservation</p>
-                <p className="text-sm font-medium text-slate-800">{recu.dateReserv || '-'}</p>
+                <p className="text-sm font-medium text-slate-800">{formatDateHeureFr(recu.dateReserv)}</p>
               </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Date voyage</p>
-                <p className="text-sm font-bold text-blue-600">{recu.dateVoyage}</p>
+                <p className="text-sm font-bold text-blue-600">{formatDateFr(recu.dateVoyage)}</p>
               </div>
             </div>
           </div>
@@ -84,15 +108,9 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
             {/* Voyage */}
             <div className="bg-slate-50 rounded-xl p-6 border border-slate-100">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Détails du voyage</h3>
-              <div className="flex justify-between mb-4">
-                <div>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Véhicule</p>
-                  <p className="font-bold text-slate-900">Voiture N°{recu.idVoiture}</p>
-                </div>
-                <div className="text-right">
-               
-            
-                </div>
+              <div className="mb-4">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Véhicule</p>
+                <p className="font-bold text-slate-900">Voiture N°{recu.idVoiture}</p>
               </div>
               <div>
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Siège</p>
@@ -111,7 +129,7 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
               <table className="w-full text-left text-sm">
                 <thead className="bg-slate-100/50">
                   <tr>
-                    <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider">DESCRIPTION</th>
+                    <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider">Description</th>
                     <th className="py-3 px-6 text-[10px] font-bold text-slate-500 uppercase tracking-wider text-right">Montant</th>
                   </tr>
                 </thead>
@@ -122,16 +140,18 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
                       <p className="text-xs text-slate-500">Trajet standard premium</p>
                     </td>
                     <td className="py-4 px-6 text-right font-medium text-slate-900">
-                      {recu.frais.toLocaleString()} Ar
+                      {recu.frais.toLocaleString('fr-FR')} Ar
                     </td>
                   </tr>
                   <tr>
                     <td className="py-4 px-6">
                       <p className="font-bold text-slate-900">Mode de paiement</p>
-                      <p className="text-[10px] font-bold text-emerald-600 uppercase mt-1">{recu.payment.replace('_', ' ')}</p>
+                      <p className="text-[10px] font-bold text-emerald-600 uppercase mt-1">
+                        {recu.payment.replace('_', ' ')}
+                      </p>
                     </td>
                     <td className="py-4 px-6 text-right text-slate-500">
-                      - {recu.montantAvance.toLocaleString()} Ar
+                      - {recu.montantAvance.toLocaleString('fr-FR')} Ar
                     </td>
                   </tr>
                 </tbody>
@@ -139,7 +159,7 @@ const RecuPreviewModal: React.FC<RecuPreviewModalProps> = ({ recu, onClose }) =>
                   <tr>
                     <td className="py-5 px-6 font-bold text-blue-700 uppercase tracking-wider text-sm">Reste à payer</td>
                     <td className="py-5 px-6 text-right font-extrabold text-blue-700 text-lg">
-                      {recu.resteAPayer.toLocaleString()} Ar
+                      {recu.resteAPayer.toLocaleString('fr-FR')} Ar
                     </td>
                   </tr>
                 </tfoot>
