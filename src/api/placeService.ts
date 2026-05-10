@@ -1,9 +1,8 @@
-import axios from 'axios';
+import axios from './axiosConfig';
 
 const BASE_URL = import.meta.env.VITE_API_URL || "/api";
-const API_URL = `${BASE_URL}/place`;
+const API_URL = `${BASE_URL}/api/place`;
 
-// Récupère le nombre de places libres pour calculer la barre de progression
 export const getCountPlacesLibres = async (idVoit: string) => {
   try {
     console.log(`Fetching count for voiture: ${idVoit}`);
@@ -12,12 +11,10 @@ export const getCountPlacesLibres = async (idVoit: string) => {
     return response.data;
   } catch (error) {
     console.error(`Erreur getting count for ${idVoit}:`, error);
-    // Retourner 0 en cas d'erreur plutôt que de crasher
     return 0;
   }
 };
 
-// Si vous avez besoin de la liste complète des places plus tard
 export const getPlacesLibres = async (idVoit: string) => {
   try {
     const response = await axios.get(`${API_URL}/${idVoit}/libre`);

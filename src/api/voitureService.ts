@@ -1,39 +1,29 @@
-import axios from 'axios';
+import axios from './axiosConfig';
 import type { Voiture } from '../types/voiture';
-
 import type { Place } from '../types/voiture';
 
 const BASE_URL = import.meta.env.VITE_API_URL || "/api";
-
-const API_URL = `${BASE_URL}/voiture`;
-
-
-const PLACE_URL = `${BASE_URL}/place`;
+const API_URL = `${BASE_URL}/api/voiture`;
+const PLACE_URL = `${BASE_URL}/api/place`;  // corrigé : manquait /api/
 
 export const saveVoiture = async (voiture: Voiture) => {
   return await axios.post(API_URL, voiture);
-}
+};
 
-// Récupère la liste des voitures
 export const getVoitures = async () => {
   try {
     const response = await axios.get<Voiture[]>(API_URL);
     console.log('API Response:', response);
-
-    // Gérer les différents formats de réponse possibles
     const data = response.data;
     const voituresList = Array.isArray(data) ? data : (data || []);
-
     console.log('Voitures récupérées:', voituresList);
     return { data: voituresList };
   } catch (error: any) {
     console.error('Erreur API voiture:', error);
-    // Retourner un array vide au lieu de throw pour éviter les erreurs dans l'UI
     return { data: [] };
   }
 };
 
-// Supprime une voiture par ID (cascade delete sur les places)
 export const deleteVoiture = async (idVoit: string) => {
   try {
     console.log(`Suppression de la voiture: ${idVoit}`);
@@ -49,7 +39,6 @@ export const deleteVoiture = async (idVoit: string) => {
   }
 };
 
-// Met à jour une voiture (design, type, frais - pas nbrPlace)
 export const updateVoiture = async (idVoit: string, voiture: Voiture) => {
   try {
     console.log(`Mise à jour de la voiture: ${idVoit}`, voiture);
@@ -65,8 +54,6 @@ export const updateVoiture = async (idVoit: string, voiture: Voiture) => {
   }
 };
 
-
-
 export const getAllPlacesByVoiture = async (idVoit: string) => {
   try {
     const response = await axios.get<Place[]>(`${PLACE_URL}/${idVoit}/toutes`);
@@ -79,7 +66,7 @@ export const getAllPlacesByVoiture = async (idVoit: string) => {
 
 export const countPlacesLibres = async (idVoit: string) => {
   try {
-    const response = await axios.get<number>(`${PLACE_URL}/${idVoit}/libres/count`);
+    const response = await axios.get<number>(`${PLACE_URL}/${idVoit}/libre/count`); // corrigé : libres → libre
     return response;
   } catch (error) {
     console.error(`Erreur comptage places libres ${idVoit}:`, error);

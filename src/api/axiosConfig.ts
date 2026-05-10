@@ -12,4 +12,16 @@ axios.interceptors.request.use(
     (error) => Promise.reject(error)
 );
 
+// Intercepteur de réponse : redirige vers /login si token expiré
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            authService.logout();
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    }
+);
+
 export default axios;

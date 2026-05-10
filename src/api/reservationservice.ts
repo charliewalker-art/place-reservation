@@ -1,8 +1,8 @@
-import axios from 'axios';
-import type { Reservation, VoyageurDTO, DashboardDTO,RecuDTO } from '../types/reservation';
+import axios from './axiosConfig';
+import type { Reservation, VoyageurDTO, DashboardDTO, RecuDTO } from '../types/reservation';
 
 const BASE_URL = import.meta.env.VITE_API_URL || "/api";
-const API_URL = `${BASE_URL}/reservation`;
+const API_URL = `${BASE_URL}/api/reservation`;
 
 export const createReservation = async (
   idVoit: string,
@@ -30,7 +30,6 @@ export const getReservations = async () => {
     return { data: Array.isArray(response.data) ? response.data : [] };
   } catch (error: any) {
     console.error('Erreur récupération réservations:', error);
-    // Retourner un array vide au lieu de throw
     return { data: [] };
   }
 };
@@ -41,7 +40,6 @@ export const getReservationsByVoiture = async (idVoit: string) => {
     return { data: Array.isArray(response.data) ? response.data : [] };
   } catch (error: any) {
     console.error(`Erreur récupération réservations voiture ${idVoit}:`, error);
-    // Retourner un array vide au lieu de throw
     return { data: [] };
   }
 };
@@ -100,7 +98,6 @@ export const getRecu = async (idReserv: string) => {
     console.error(`Erreur recuperation recu ${idReserv}:`, error);
     throw error;
   }
-  
 };
 
 export const getTotalRecette = async () => {

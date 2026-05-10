@@ -1,4 +1,4 @@
-import { createBrowserRouter, Outlet, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import Navbar from './components/ui/Navbar';
 import { VoituresPage } from './pages/VoituresPage';
 import { ClientsPage } from './pages/ClientsPage';
@@ -8,12 +8,14 @@ import { authService } from './api/authService';
 
 const ProtectedLayout = () => {
     if (!authService.isAuthenticated()) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/login" replace />;
     }
     return (
         <div className="min-h-screen bg-slate-50 font-sans">
             <Navbar />
-            <Outlet />
+            <div className="container mx-auto p-4">
+                <Outlet />
+            </div>
         </div>
     );
 };

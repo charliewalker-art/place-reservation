@@ -1,8 +1,8 @@
-import axios from 'axios';
+import axios from './axiosConfig';
 import type { Client } from '../types/client';
 
 const BASE_URL = import.meta.env.VITE_API_URL || "/api";
-const API_URL = `${BASE_URL}/client`;
+const API_URL = `${BASE_URL}/api/client`;
 
 export const saveClient = async (client: Client) => {
   return await axios.post(API_URL, client);
@@ -16,13 +16,9 @@ export const getClients = async () => {
     return { data: clientsList };
   } catch (error) {
     console.error('Erreur API client:', error);
-    // Retourner un array vide au lieu de throw
     return { data: [] };
   }
 };
-
-
-
 
 export const deleteClient = async (idCli: number) => {
   try {
@@ -44,14 +40,12 @@ export const updateClient = async (idCli: number, client: Client) => {
   }
 };
 
-  export const searchClient = async (query: string) => {
+export const searchClient = async (query: string) => {
   try {
     const response = await axios.get<Client[]>(`${API_URL}/search?query=${query}`);
     return { data: Array.isArray(response.data) ? response.data : [] };
   } catch (error) {
     console.error('Erreur recherche client:', error);
-    // Retourner un array vide au lieu de throw
     return { data: [] };
   }
-
-}   ;
+};
